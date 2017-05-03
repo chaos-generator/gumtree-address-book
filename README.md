@@ -26,4 +26,16 @@ Some insights into what we'll be looking for (and what we will not):
 Good Luck!
 
 ## Post Test notes.
+I've separated reading the data in the DAO layer, manipulating the data in the service layer and I created a simple pojo and a simple App to run and answer the three question from the test.
 
+I've wrote mostly success tests, but with more time, I'd write tests for corner cases, such as more mal-formed data eg. invalid dob format, test for existence of header, empty vs null cells, etc.
+
+The bit that I spent most of the time, was actually stuck with converting 2 digit years into LocalDateTime, which was either failing the parsing, or giving me a date in the future. A quick google pointed me in the direction of Joda to resolve this issue.
+
+Coverage is above 79% and find bugs reported no issues.
+
+I would consider adding a controller layer as well as adding spring, so that allows for dependency injection, making use of the interfaces to create loosely coupled interactions.
+Also, spring-boot would make it simple to get all this as a REST API.
+  
+
+ 
