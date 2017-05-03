@@ -2,10 +2,13 @@ package com.gumtree.augusto.dao;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Locale;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -13,9 +16,9 @@ import com.gumtree.augusto.pojo.Contact;
 import com.opencsv.CSVReader;
 
 /**
+ * CSV implementation of Contacts DAO.
  * 
  * @author augusto
- *
  */
 public class CsvContactDao implements ContactDao {
 
@@ -33,43 +36,51 @@ public class CsvContactDao implements ContactDao {
      */
     @Override
     public List<Contact> getAllContacts() {
+        // Skips loading, if cached already
+        if (cache.size() <= 0) {
+            readCsv();
+        }
+        return cache;
+    }
+
+    private void readCsv() {
         try (CSVReader reader = new CSVReader(new FileReader(csvFile));) {
             String[] line;
             while ((line = reader.readNext()) != null) {
-                Contact aContact = new Contact(line[0], line[1],
-                                ZonedDateTime.parse(line[2], DateTimeFormatter
-                                                .ofPattern("dd/MM/yyyy")));
-                // If there is no name, other functions of the system won't
-                // work, so consider this a problem.
-                if (!Strings.isNullOrEmpty(line[0])) {
-                    cache.add(aContact);
-                } else {
-                    // TODO implement a logger
-                    // TODO log a warning
-                    System.out.println("Could not ");
-                }
+                parseLine(line);
             }
         } catch (IOException e) {
             // TODO implement a logger
             e.printStackTrace();
         }
-        return null;
     }
 
-    /**
-     * Retrieves a list of users with the given name.
-     * 
-     * @param name
-     *            A name to search in the contact list
-     * @return a list with the contacts with the given name.
-     */
-    @Override
-    public List<Contact> findByName(String name) {
-        // if cache is empty, try loading it first.
-        if (cache.size() <= 0) {
-            getAllContacts();
+    private void parseLine(String[] line) {
+        if (!Strings.isNullOrEmpty(line[0]) && !Strings.isNullOrEmpty(line[1])
+                        && !Strings.isNullOrEmpty(line[2])) {
+            DateTime dob = parseDob(line);
+
+            Contact aContact = new Contact(line[0].trim(), line[1].trim()
+                            .toLowerCase(), dob);
+            cache.add(aContact);
+        } else {
+            // TODO implement a logger
+            // TODO log a warning
+            System.out.println(String
+                            .format("Could not read line. One or more "
+                                            + "values are null or empty [%s, %s, %s]",
+                                            line[0], line[1], line[2]));
         }
-        return cache.stream().filter(c -> c.getName().equals(name))
-                        .collect(Collectors.toList());
     }
+
+    private DateTime parseDob(String[] line) {
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                        .append(DateTimeFormat.forPattern("dd/MM/yy"))
+                        .toFormatter().withPivotYear(1950)
+                        .withLocale(Locale.UK);
+
+        DateTime dob = formatter.parseDateTime(line[2].trim());
+        return dob;
+    }
+
 }

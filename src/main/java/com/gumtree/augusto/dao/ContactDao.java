@@ -21,12 +21,5 @@ public interface ContactDao {
      */
     List<Contact> getAllContacts();
 
-    /**
-     * Retrieves one contact with the given name.<br>
-     * 
-     * @param name
-     * @return
-     */
-    List<Contact> findByName(String name);
 
 }
