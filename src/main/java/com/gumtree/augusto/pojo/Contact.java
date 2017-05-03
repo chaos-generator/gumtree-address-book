@@ -1,11 +1,14 @@
 package com.gumtree.augusto.pojo;
 
-import java.util.Comparator;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
 
+/**
+ * Represents a contact in the address book.
+ * 
+ * @author augusto
+ */
 public class Contact {
     private final String name;
     private final String gender;
@@ -41,8 +44,10 @@ public class Contact {
             return false;
         }
         Contact compareMe = (Contact) obj;
-        return new EqualsBuilder().append(this.getName(), compareMe.getName())
-                        .append(this.getGender().toLowerCase(), compareMe.getGender().toLowerCase())
+        return new EqualsBuilder()
+                        .append(this.getName(), compareMe.getName())
+                        .append(this.getGender().toLowerCase(),
+                                        compareMe.getGender().toLowerCase())
                         .append(this.getDob(), compareMe.getDob()).isEquals();
     }
-    }
+}

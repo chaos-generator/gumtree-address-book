@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.gumtree.augusto.pojo.Contact;
 
+/**
+ * The service interface.
+ * 
+ * @author augusto
+ */
 public interface ContactService {
 
     /**
@@ -27,10 +32,35 @@ public interface ContactService {
      * @return
      */
     List<Contact> findByGender(String gender);
-    
+
     /**
      * Retrieves a list of contacts sorted by date of birth.
+     * 
      * @return a list of contacts sorted by date of birth.
      */
     List<Contact> getContactsSortedByDob();
+
+    /**
+     * Difference of days between to contacts
+     * 
+     * @param youngerContact
+     * @param olderContact
+     * 
+     * @return the age difference in days between the two contacts. If a negative
+     *         number is return, it means that the younger and older contacts
+     *         have been switched.
+     */
+    int getDifferenceInDays(Contact youngerContact, Contact olderContact);
+
+    /**
+     * Difference of days between to contacts
+     * 
+     * @param youngerContact
+     * @param olderContact
+     * 
+     * @return the age difference in days between the two contacts. If a negative
+     *         number is return, it means that the younger and older contacts
+     *         have been switched.
+     */
+    int getDifferenceInDays(String youngerContact, String olderContact);
 }

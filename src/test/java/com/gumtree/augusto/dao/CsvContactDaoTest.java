@@ -1,9 +1,11 @@
 package com.gumtree.augusto.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,15 +32,32 @@ public class CsvContactDaoTest {
     }
 
     @Test
+    public void cannotFindCsv(){
+        dao = new CsvContactDao("FileNotFound");
+    }
+
+    @Test
     public void getAllContacts_Sucess() {
         List<Contact> contacts = dao.getAllContacts();
         int expectedSize = 5;
-        Assert.assertEquals(expectedSize, contacts.size());
-        Assert.assertTrue(contacts.contains(BILL));
-        Assert.assertTrue(contacts.contains(PAUL));
-        Assert.assertTrue(contacts.contains(GEMMA));
-        Assert.assertTrue(contacts.contains(SARAH));
-        Assert.assertTrue(contacts.contains(WES));
+        assertEquals(expectedSize, contacts.size());
+        assertTrue(contacts.contains(BILL));
+        assertTrue(contacts.contains(PAUL));
+        assertTrue(contacts.contains(GEMMA));
+        assertTrue(contacts.contains(SARAH));
+        assertTrue(contacts.contains(WES));
     }
 
+    
+    @Test
+    public void getAllContacts_FaultyCsv() {
+        dao = new CsvContactDao("src/main/resources/FaultyAddressBook");
+        List<Contact> contacts = dao.getAllContacts();
+        int expectedSize = 3;
+        assertEquals(expectedSize, contacts.size());
+        assertTrue(contacts.contains(GEMMA));
+        assertTrue(contacts.contains(SARAH));
+        assertTrue(contacts.contains(WES));
+    }
+    
 }

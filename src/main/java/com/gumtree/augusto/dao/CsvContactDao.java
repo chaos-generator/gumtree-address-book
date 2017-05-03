@@ -76,7 +76,7 @@ public class CsvContactDao implements ContactDao {
     private DateTime parseDob(String[] line) {
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
                         .append(DateTimeFormat.forPattern("dd/MM/yy"))
-                        .toFormatter().withPivotYear(1950)
+                        .toFormatter().withPivotYear(1970)
                         .withLocale(Locale.UK);
 
         DateTime dob = formatter.parseDateTime(line[2].trim());
